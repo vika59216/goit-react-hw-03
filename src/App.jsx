@@ -1,71 +1,60 @@
-
-
-
-import "./App.css";
 import { useState } from "react";
-import { useEffect } from "react";
+import{setUsers} from "react"
+import { nanoid } from "nanoid";
+import "./App.css";
 
-import Options from "./components/Options/Options";
-import Feedback from "./components/Feedback/Feedback";
-import Description from "./components/Description/Description";
-import Notification from "./components/Notification/Notification";
 
-function App() {
-  const [feedbackTypes, setFeedbackTypes] = useState(() => {
-    const feedbacks = window.localStorage.getItem("feedbacks");
-    if (feedbacks) {
-      return JSON.parse(feedbacks);
-    } else {
-      return {
-        good: 0,
-        neutral: 0,
-        bad: 0,
-      };
+import meestExpressUsers from "./meesExpress.json";
+import ContactForm from "./components/ContactForm/ContactForm"
+import Contact from "./components/Contact/Contact";
+import ContactList from "./components/ContactList/ContactList";
+import SearchBox from "./components/SearchBox/SearchBox";
+
+
+
+import React from 'react'
+
+const App = () => {  
+  const [users, setUsers] = useState(() => {
+    const stringifiedUsers = localStorage.getItem("users");
+    if (!stringifiedUsers) return meestExpressUsers;
+     
+    const parsedUsers = JSON.parse(stringifiedUsers);
+    return parsedUsers
+})
+
+
+
+  const onAddUser = (formData) => {
+   const finalUser = {
+      ...formData,
+      id: nanoid()
     }
-  });
-
-  const totalFeedback =
-    feedbackTypes.good + feedbackTypes.neutral + feedbackTypes.bad;
-
-  const updateFeedback = (feedbackType) => {
-    setFeedbackTypes({
-      ...feedbackTypes,
-      [feedbackType]: feedbackTypes[feedbackType] + 1,
-    });
+    setUsers((prevState) => [...prevState, finalUser]);
   };
 
-  const onReset = () => {
-    setFeedbackTypes({
-      good: 0,
-      bad: 0,
-      neutral: 0,
-    });
-  };
-
-  const positive = Math.round((feedbackTypes.good / totalFeedback) * 100);
-
-  useEffect(() => {
-    window.localStorage.setItem("feedbacks", JSON.stringify(feedbackTypes));
-  }, [feedbackTypes]);
+  const onDeleteUser = (userId) => {
+    setUsers(prevUsers => prevUsers.filter(user => user.id !== userId))
+  }
 
   return (
     <div>
-      <Description />
-      <Options
-        updateFeedback={updateFeedback}
-        totalFeedback={totalFeedback}
-        onReset={onReset}
+      <ContactForm onAddUser={onAddUser} />
+      <Contact />
+      <ContactList />
+      <SearchBox />
+      <ContactList
+        users={users}
+        onDeleteUser={onDeleteUser}
+        boxTitle=""
+        
+        
       />
-      {totalFeedback === 0 && <Notification />}
-      {totalFeedback !== 0 && (
-        <Feedback
-          feedbackTypes={feedbackTypes}
-          totalFeedback={totalFeedback}
-          positive={positive}
-        />
-      )}
-    </div>
-  );
+    
+    
+     
+      </div>
+  )
 }
 
-export default App;
+export default App
