@@ -1,20 +1,23 @@
+import React from "react";
+import { FaUser, FaPhone } from "react-icons/fa";
+import css from "./Contact.module.css";
 
-import React from 'react'
-
-
-const Contact = ({user, onDeleteUser}) => {
+const Contact = ({ id, name, number, onDelete }) => {
   return (
-    <li>
-      <p>
-        Name: <b>{user.userName }</b>
-      </p>
-      <p>
-         Phone: <b>{user.userPhone }</b>
-      </p>
-      <button type="button" onClick={() => onDeleteUser(user.id)}></button>
-    </li>
- 
-  )
-}
+    <>
+      <div className={css.personData}>
+        <div className={css.personName}>
+          <FaUser className={css.iconPerson} />
+          <p>{name}</p>
+        </div>
+        <div className={css.personPhon}>
+          <FaPhone className={css.iconPhon} />
+          <p>{number}</p>
+        </div>
+      </div>
+      <button onClick={() => onDelete(id)}>Delete</button>
+    </>
+  );
+};
 
-export default Contact
+export default Contact;

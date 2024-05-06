@@ -1,31 +1,27 @@
-import React from 'react'
-import Contact from '../Contact/Contact';
-import css from "./ContactList.module.css"
+import React from "react";
+import Contact from "../Contact/Contact";
+import css from "./ContactList.module.css";
 
-
-const ContactList = ({ users, onDeleteUser, boxTitle }) => {
-    return (
-        <div className={css.mailbox}>
-            <h2 className={css.mailboxTitle}>{boxTitle}</h2>
-
-            <ul className={css.contactList}>
-            {Array.isArray(users) &&
-                users.map((user) => {
-                    return (
-                        <Contact
-                            key={user.id}
-                            onDeleteUser={onDeleteUser}
-                            user={user} />
-                    );
-                })}
-                </ul>
-
-        </div>
-    
-    );
+const ContactList = ({ contactDatas, onDelete }) => {
+  return (
+    <ul className={css.personList}>
+      {contactDatas.map((contactData) => {
+        return (
+          <li className={css.personItem} key={contactData.id}>
+            <Contact
+              name={contactData.name}
+              number={contactData.number}
+              id={contactData.id}
+              onDelete={onDelete}
+            />
+          </li>
+        );
+      })}
+    </ul>
+  );
 };
 
-export default ContactList
+export default ContactList;
 
 
 
